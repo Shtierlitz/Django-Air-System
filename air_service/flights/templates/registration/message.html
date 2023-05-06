@@ -1,0 +1,10 @@
+
+<h1><strong>Hello There!</strong></h1>
+
+<h2><strong>New message from Django-Air</strong></h2>
+
+<h2><strong>Name: {{ name }}</strong></h2>
+<h2><strong>E-mail: {{ email }}</strong></h2>
+{% autoescape on %}
+<h3>Message: <b>{{ content | safe }}</b></h3>
+{% endautoescape %}

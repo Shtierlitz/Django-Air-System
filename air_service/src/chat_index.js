@@ -1,0 +1,1 @@
+import '../flights/static/flights/js/chat_websocket.js';

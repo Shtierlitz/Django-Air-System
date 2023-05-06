@@ -1,0 +1,189 @@
+{% extends 'flights/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mb-5">
+        <br><br>
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="card shadow border">
+                    <div class="card-body">
+                        <div class="text-center">
+                            {% include 'flights/includes/flight_table.html' %}
+                        </div>
+                        <h2 style="text-align: center">Confirm ticket:</h2>
+                        <div class="container-fluid" style="font-size: 14px;">
+                            <div class="row justify-content-center">
+                                <form method="POST" class="card p-4 mt-4 col-md-auto" autocapitalize="off"
+                                      style="background-color: #f5f5f5; min-width: 500px">
+                                    {% csrf_token %}
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Flight:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ flight.name }} | {{ flight.origin_airport.2 }}
+                                                    - {{ flight.destination_airport.2 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Time:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ flight.departure_time }} - {{ flight.arrival_time }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Plane:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ flight.aircraft }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Passenger:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ user }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Passenger first name:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ user.first_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Passenger last name:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ user.last_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Passenger email:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ user.email }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for i in extras %}
+                                        <div class="card" style="background-color: #d6fff3">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <div class="col-md-auto">
+                                                        Extra: {{ forloop.counter }}.
+                                                    </div>
+                                                    <div class="col-md-auto">
+                                                        {{ i.name }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Seat:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    {{ row_letter }}{{ seat_number }} {{ seat_type }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background-color: #d6fff3">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="col-md-auto">
+                                                    Price:
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    <strong>{{ price }}$</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="flight" value="{{ flight_id }}">
+                                    <input type="hidden" name="price" value="{{ price }}">
+                                    <input type="hidden" name="user" value="{{ user.id }}">
+                                    <input type="hidden" name="row_letter" value="{{ row_letter }}">
+                                    <input type="hidden" name="seat_number" value="{{ seat_number }}">
+                                    <input type="hidden" name="seat_type" value="{{ seat_type }}">
+                                    <input type="hidden" name="status" value="UNPAID">
+                                    {% for extra in extras %}
+                                        <input type="hidden" name="extras" value="{{ extra.pk }}">
+                                    {% endfor %}
+                                    <br>
+                                    {% if form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            {% for error in form.non_field_errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                        <br>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="d-flex align-items-center">
+                                                <a href="{% url 'seat' flight_id %}" class="btn btn-danger"
+                                                   style="width: 150px; height: 50px; border-radius: 7px; line-height: 2;">
+                                                    Return to select
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    {% else %}
+                                        <div class="d-flex justify-content-center">
+                                            <div class="d-flex align-items-center">
+                                                <button type="submit" class="btn btn-primary"
+                                                        style="width: 150px; height: 50px; border-radius: 7px; line-height: 1;">
+                                                    Confirm and continue
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

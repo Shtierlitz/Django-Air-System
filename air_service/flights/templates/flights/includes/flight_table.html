@@ -1,0 +1,21 @@
+<table class="table">
+    <tr>
+        <th>Flight</th>
+        <th>From - To</th>
+        <th>Departure time</th>
+        <th>Arrival time</th>
+        <th>Aircraft model</th>
+        <th>Seats left</th>
+    </tr>
+    <tr>
+        <td><h5>{{ flight.name }}</h5></td>
+        <td>
+            {{ flight.origin_airport.2 }} {{ flight.origin_airport.1 }} {{ flight.origin_airport.3 }}
+                - {{ flight.destination_airport.2 }} {{ flight.destination_airport.1 }} {{ flight.destination_airport.3 }}
+        </td>
+        <td>{{ flight.departure_time }}</td>
+        <td>{{ flight.arrival_time }}</td>
+        <td>{{ flight.aircraft }}</td>
+        <td>{{ flight.total_seats }}</td>
+    </tr>
+</table>

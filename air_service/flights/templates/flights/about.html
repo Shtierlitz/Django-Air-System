@@ -1,0 +1,94 @@
+{% extends 'flights/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="text-center mt-5 mb-4">About Django-Air-Service</h1>
+                        <p>DjangoAirSystem is a comprehensive flight booking and management platform designed to
+                            simplify and streamline the process of searching, booking, and managing flights. Our goal is
+                            to provide a user-friendly experience while ensuring security and efficiency.</p>
+
+                        <h2 class="mt-4 mb-3">Key Features</h2>
+                        <ul>
+                            <li><strong>User Authentication:</strong> Users can create an account, log in, and log out
+                                securely. The platform also offers social login functionality through Google.
+                            </li>
+                            <li><strong>Flight Search:</strong> Users can search for available flights based on their
+                                origin, destination, and desired travel dates.
+                            </li>
+                            <li><strong>Flight Booking:</strong> After finding a suitable flight, users can easily book
+                                their seats.
+                            </li>
+                            <li><strong>Booking Management:</strong> Users can view, modify, or cancel their flight
+                                bookings at any time.
+                            </li>
+                            <li><strong>Profile Management:</strong> Users can manage their personal information,
+                                including their name, email address, gender and phone number.
+                            </li>
+                            <li><strong>Email Verification:</strong> Upon registration, users receive an email to verify
+                                their email address, ensuring the security of their account.
+                            </li>
+                            <li><strong>Interactive Chat with Managers:</strong> Users can communicate with Check-in
+                                managers and Gate managers through an interactive chat feature, allowing them to undergo
+                                necessary checks and receive assistance during the check-in and boarding processes.
+                            </li>
+                            <li><strong>Email Ticket Confirmation:</strong> After booking, users receive an email with
+                                an attached PDF ticket. They can also view or download the ticket on the ticket page
+                                within the platform.
+                            </li>
+                        </ul>
+                        </ul>
+
+                        <h2 class="mt-4 mb-3">Technologies Used</h2>
+                        <ul>
+                            <li><strong>Django:</strong> DjangoAirSystem is built using Django, a high-level Python web
+                                framework that encourages rapid development and clean, pragmatic design.
+                            </li>
+                            <li><strong>Bootstrap:</strong> The platform utilizes Bootstrap, a popular front-end
+                                framework for developing responsive, mobile-first websites.
+                            </li>
+                            <li><strong>SQLite:</strong> SQLite is used as the database for storing flight and user data
+                                in the local host server.
+                            </li>
+                            <li><strong>PostgreSQL:</strong> PostgreSQL is used as the database for storing flight and
+                                user data in the development server.
+                            </li>
+                            <li><strong>AllAuth:</strong> Django AllAuth is used for handling user authentication,
+                                including social logins.
+                            </li>
+                            <li><strong>WebSockets and Django Channels:</strong> WebSockets and Django Channels are used
+                                for real-time communication between users and operators during the check-in and onboard
+                                control process.
+                            </li>
+                            <li><strong>Celery:</strong> Celery is used to create and manage tasks for handling ticket
+                                expiration, ensuring timely notifications and updates for users regarding their
+                                bookings.
+                            </li>
+                        </ul>
+
+
+                        <h2 class="mt-4 mb-3">Future Enhancements</h2>
+                        <p>We plan to continually improve and expand DjangoAirSystem to provide an even better
+                            experience for our users. Some of our planned enhancements include:</p>
+                        <ul>
+                            <li>Adding more filter options for flight search, such as filtering by airline, duration, or
+                                layovers.
+                            </li>
+                            <li>Implementing a loyalty program that rewards frequent flyers with points and exclusive
+                                discounts.
+                            </li>
+                            <li>Integrating more social login options, such as Facebook and Twitter.</li>
+                            <li>Expanding our database to include more airlines and flight routes.</li>
+                            <li>Developing a mobile app for iOS and Android devices.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

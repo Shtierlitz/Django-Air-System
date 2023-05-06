@@ -1,0 +1,56 @@
+{% extends 'flights/staff/staff_base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <div class="row">
+            <div class="col-lg-13 mx-auto">
+                <div class="card shadow border" style="background-color: #f0f9ff">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <h1>Users list</h1>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table" style="border-collapse:collapse;">
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User name</th>
+                                        <th>First name</th>
+                                        <th>Last name</th>
+                                        <th>Email verify</th>
+                                        <th>Phone</th>
+                                        <th>Gender</th>
+                                        <th>Group</th>
+                                    </tr>
+                                    {% for user in object_list %}
+                                        <tr>
+                                            <td>{{ user.id }}</td>
+                                            <td><a href="{% url 'assign_role' user.id %}">{{ user.username }}</a></td>
+                                            <td>{{ user.first_name }}</td>
+                                            <td>{{ user.last_name }}</td>
+                                            <td>{{ user.email_verify }}</td>
+                                            <td>{{ user.phone }}</td>
+                                            <td>{{ user.gender }}</td>
+                                            <td>
+                                                {% with user.groups.all as groups %}
+                                                    {% if groups %}
+                                                        {% for group in groups %}
+                                                            {{ group.name }}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        User
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'flights/staff/staff_base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <div class="row">
+            <div class="col-lg-13 mx-auto">
+                <div class="card shadow border" style="background-color: #f0f9ff">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <h1>Tickets list</h1>
+                            <br>
+                            {% if not_found %}
+                                <p style="color: red">Sorry :( Such ticket does not exist! Try another one :)</p>
+                                <a href="{% url 'staff_ticket_list' %}">Return to all tickets</a>
+                            {% else %}
+                                <div class="table-responsive"> <!-- Добавьте этот div -->
+                                    <table class="table" style="border-collapse:collapse;">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Code</th>
+                                            <th>Status</th>
+                                            <th>User</th>
+                                            <th>Flight</th>
+                                            <th>Price</th>
+                                            <th>Seat</th>
+                                            <th>Booking date</th>
+                                            <th>Departure date</th>
+                                            <th>Check In</th>
+                                            <th>Onboard</th>
+                                        </tr>
+                                        {% for ticket in object_list %}
+
+                                            <tr>
+                                                <td>{{ ticket.id }}</td>
+                                                <td><a href="{% url 'staff_ticket' ticket.id %}">{{ ticket.code }}</a>
+                                                </td>
+                                                <td style="{% if ticket.status == 'UNPAID' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.status }}</td>
+                                                <td>{{ ticket.user.first_name }} {{ ticket.user.last_name }}</td>
+                                                <td>{{ ticket.flight.origin_airport.code }}
+                                                    - {{ ticket.flight.destination_airport.code }}</td>
+                                                <td>{{ ticket.price }}$</td>
+                                                <td>
+                                                    {{ ticket.seat.row_letter }}{{ ticket.seat.seat_number }} {{ ticket.seat.seat_type }}</td>
+                                                <td>{{ ticket.booking_date }}</td>
+                                                <td>{{ ticket.flight.departure_time }}</td>
+                                                <td style="{% if ticket.check_in == 'NOT APPROVED' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.check_in }}</td>
+                                                <td style="{% if ticket.onboard == 'NOT APPROVED' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.onboard }}</td>
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1" aria-label="First">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">First</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&lsaquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in paginator.page_range %}
+                                    {% if page_obj.number == page_num %}
+                                        <li class="page-item active"><a class="page-link"
+                                                                        href="?page={{ page_num }}">{{ page_num }}</a>
+                                        </li>
+                                    {% elif page_num > page_obj.number|add:"-3" and page_num < page_obj.number|add:"3" %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}"
+                                           aria-label="Next">
+                                            <span aria-hidden="true">&rsaquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ paginator.num_pages }}" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Last</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,1 @@
+import '../flights/static/flights/js/ticket_websocket.js';

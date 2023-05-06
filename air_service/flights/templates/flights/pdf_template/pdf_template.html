@@ -1,0 +1,375 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/ico" href="/static/flights/images/icon.ico">
+    <title>e-Ticket</title>
+    <style>
+        @page {
+            margin: 37px 50px;
+        }
+
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        body {
+            padding: 7% 7%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            display: flex;
+        }
+
+        .header {
+            text-align: right;
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        li {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .col {
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            max-width: 100%
+        }
+
+        table {
+            margin-top: 0;
+            width: 100%;
+        }
+
+        .table {
+            margin-top: 25px;
+        }
+
+        tr {
+            width: 100%;
+        }
+
+        th {
+
+            width: 25%;
+            text-align: left;
+            padding: 5px 15px;
+        }
+
+        td {
+
+            width: 25%;
+            text-align: left;
+            padding: 5px 10px;
+        }
+
+        caption {
+            text-align: left;
+            background-color: #a9a9a9;
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+        }
+
+        .tr-caption {
+            text-align: left;
+            background-color: #a9a9a9;
+            color: white;
+            padding: 0;
+            font-weight: bold;
+            width: 100%;
+            font-size: 1.4em;
+            height: 35px;
+        }
+
+        .tr-caption th {
+            font-size: 1.4em;
+        }
+
+
+        .tr-even {
+            background-color: #f0f0f0;
+        }
+
+        .tr-odd {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+<nav style="height: 100px">
+    <div class="col logo" style="width: 50%;">
+        <span style="color: rgb(225, 35, 35); font-weight: bold; font-size: 2.5em;">FLIGHT</span>
+    </div>
+    <div class="col header" style="width: 50%;">
+        <span style="margin: auto 0 auto auto;">E-Ticket</span>
+    </div>
+</nav>
+
+<hr style="height: 1px; border: 0; background-color: grey;" noshade>
+<table class="table">
+    <tr class="tr-caption">
+        <th>Flight</th>
+        <th style="font-size: 5em">Departure time</th>
+        <th style="font-size: 5em">Arrival time</th>
+        <th style="font-size: 5em">Aircraft model</th>
+    </tr>
+</table>
+<table class="table">
+    <tr class="tr-odd">
+        <td>
+            <h5>{{ flight.origin_airport.2 }}
+                - {{ flight.destination_airport.2 }}</h5>
+        </td>
+        <td>{{ flight.departure_time }}</td>
+        <td>{{ flight.arrival_time }}</td>
+        <td>{{ flight.aircraft }}</td>
+    </tr>
+</table>
+<hr style="height: 1px; border: 0; background-color: grey;" noshade>
+
+<main style="padding: 10px;">
+    <div style="margin: 15px auto;">
+        <h3>Important information</h3>
+        <ul style="padding-left: 50px;">
+            <li>
+                This is your E-Ticket Iternary. You must bring it to the airport for check-in, and it is recommended you
+                to retain a copy for your records.
+            </li>
+            <li>
+                Each passenger travelling needs a printed copy of this document for immigrations, customs, airport
+                security checks and duty free purchases.
+            </li>
+            <li>
+                Economy Class passengers should report to airline check-in desks 3 hours prior to departure of all
+                flights. First and Business Class passengers should report to airline check-in desks not later than 1
+                hour prior to departure. Boarding for your flight begins at least 35 minutes before your scheduled
+                departure time. Gates close 15 minutes prior to departure
+            </li>
+        </ul>
+    </div>
+
+    <div class="table-div">
+        <table class="table">
+            <tr class="tr-caption">
+                <td style="width: 100%;">TICKET INFORMATION</td>
+            </tr>
+        </table>
+        <table cellspacing='0'>
+            <tr class="tr-odd">
+                <th>TICKET CODE</th>
+                <td>{{ ticket.code | upper }}</td>
+                <th>BOOKING DATE & TIME</th>
+                <td>{{ ticket.booking_date | date:'d M y' | upper}}<br>{{ ticket.booking_date | time:'H:i' | upper}}
+                </td>
+            </tr>
+            <tr class="tr-even">
+                <th>FLIGHT DATE</th>
+                <td>{{ ticket.flight.departure_time | date:'d M y' | upper}}</td>
+                <th>CLASS</th>
+                <td>{{ ticket.seat.seat_type | upper }}</td>
+            </tr>
+            <tr class="tr-odd">
+                <th>SEAT ROW</th>
+                <td>{{ ticket.seat.row_letter | upper }}</td>
+                <th>SEAT NUMBER</th>
+                <td>{{ ticket.seat.seat_number | upper }}</td>
+            </tr>
+            {% if ticket.tickets_extras.all|length != 0 %}
+                {% for i in ticket.tickets_extras.all %}
+                    {% if forloop.first or forloop.counter0|divisibleby:2 %}
+                        <tr class="{% cycle 'tr-even' 'tr-odd' %}">
+                    {% endif %}
+                <th>EXTRA: {{ forloop.counter }}</th>
+                <td>{{ i }} {{ i.price }}$</td>
+                {% if forloop.counter|divisibleby:2 or forloop.last %}
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <tr class="tr-odd">
+                <th>EMAIL</th>
+                <td>{{ ticket.user.email }}</td>
+                <th>MOBILE</th>
+                <td>{{ ticket.user.phone }}</td>
+            </tr>
+            <tr class="tr-even">
+                <th>PAYMENT</th>
+                <td style="{% if ticket.status == 'UNPAID' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.status | upper }}</td>
+                <th>STATUS</th>
+                <td style="{% if ticket.expire == 'EXPIRED' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.expire | upper }}</td>
+            </tr>
+        <tr class="tr-odd">
+                <th>CHECK IN STATUS</th>
+                <td style="{% if ticket.check_in == 'NOT APPROVED' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.check_in | upper }}</td>
+                <th>ONBOARD STATUS</th>
+                <td style="{% if ticket.onboard == 'NOT APPROVED' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.onboard | upper }}</td>
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr class="tr-caption">
+                <td style="width: 100%;">PASSENGER INFORMATION</td>
+            </tr>
+        </table>
+        <table cellspacing='0'>
+            <tr class="tr-odd">
+                <th>U NO.</th>
+                <th>PASSENGER NAME</th>
+                <th>SEX</th>
+                <th>CLASS</th>
+            </tr>
+
+            <tr class="tr-even">
+                <td style="width: 20%; padding-left: 20px;">{{ ticket.user.pk }}</td>
+                <td style="width: 35%; padding-left: 20px;">{{ ticket.user.last_name | upper }}/{{ ticket.user.first_name | upper }}</td>
+                <td style="width: 20%; padding-left: 20px;">{{ ticket.user.gender | upper }}</td>
+                <td style="width: 25%; padding-left: 20px;">{{ ticket.seat.seat_type | upper }}</td>
+            </tr>
+
+        </table>
+
+
+        <table class="table">
+            <tr class="tr-caption">
+                <td style="width: 100%; padding-left: 20px;">FLIGHT INFORMATION</td>
+            </tr>
+        </table>
+        <table cellspacing='0'>
+            <tr class="tr-odd">
+                <th>FLIGHT</th>
+                <th>DEPART/ARRIVE</th>
+                <th>AIRPORT/TERMINAL</th>
+            </tr>
+            <tr class="tr-even">
+                <td style="width: 29%; padding-left: 20px;">{{ ticket.flight.name | upper }}
+                </td>
+                <td style="width: 22%; padding-left: 20px;">
+                    {{ flight.departure_time | date:'d M y' | upper}}<br>{{ flight.departure_time | time:'H:i' | upper}}
+                </td>
+                <td style="width: 49%; padding-left: 20px;">{{ flight.origin_airport.0 | upper }}
+                    ({{ flight.origin_airport.1 | upper }})
+                </td>
+            </tr>
+            <tr class="tr-odd">
+                <td style="width: 29%; padding-left: 20px;"></td>
+                <td style="width: 22%; padding-left: 20px;">
+                    {{ flight.arrival_time | date:'d M y' | upper}}<br>{{ flight.arrival_time | time:'H:i' | upper}}
+                </td>
+                <td style="width: 49%; padding-left: 20px;">{{ flight.destination_airport.0 | upper }}
+                    ({{ flight.destination_airport.1 | upper }})
+                </td>
+            </tr>
+        </table>
+    <p style="margin: 10px 0; font-size: .8em;">&#169; {{ current_year }} Django Air Service Inc. All rights is not
+    reserved. :)</p>
+        <div class="page-break"></div>
+        <nav style="height: 100px">
+            <div class="col logo" style="width: 50%;">
+                <span style="color: rgb(225, 35, 35); font-weight: bold; font-size: 2.5em;">FLIGHT</span>
+            </div>
+            <div class="col header" style="width: 50%;">
+                <span style="margin: auto 0 auto auto;">E-Ticket</span>
+            </div>
+        </nav>
+        <hr style="height: 1px; border: 0; background-color: grey;" noshade>
+<table class="table">
+    <tr class="tr-caption">
+        <th>Flight</th>
+        <th style="font-size: 5em">Departure time</th>
+        <th style="font-size: 5em">Arrival time</th>
+        <th style="font-size: 5em">Aircraft model</th>
+    </tr>
+</table>
+<table class="table">
+    <tr class="tr-odd">
+        <td>
+            <h5>{{ flight.origin_airport.2 }}
+                - {{ flight.destination_airport.2 }}</h5>
+        </td>
+        <td>{{ flight.departure_time }}</td>
+        <td>{{ flight.arrival_time }}</td>
+        <td>{{ flight.aircraft }}</td>
+    </tr>
+</table>
+<hr style="height: 1px; border: 0; background-color: grey;" noshade>
+        <table class="table">
+            <tr class="tr-caption">
+                <td style="width: 100%;">FARE DETAILS</td>
+            </tr>
+        </table>
+        <table cellspacing='0' style="width: 100vw;">
+            <tr>
+                <th>Base price:</th>
+                <td>USD 100.0</td>
+            </tr>
+            {% if ticket.tickets_extras.all|length != 0 %}
+                {% for i in ticket.tickets_extras.all %}
+                    {% if forloop.first or forloop.counter0|divisibleby:2 %}
+                        <tr class="{% cycle 'tr-even' 'tr-odd' %}">
+                    {% endif %}
+                <th>EXTRA:{{ forloop.counter }}</th>
+                <td>USD {{ i.price }}</td>
+                {% if forloop.counter|divisibleby:2 or forloop.last %}
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if ticket.seat.row_letter == 'B' %}
+                <tr>
+                    <th>ROW B:</th>
+                    <td>USD 20.0</td>
+                </tr>
+            {% endif %}
+            {% if ticket.seat.row_letter == 'C' %}
+                <tr>
+                    <th>ROW C:</th>
+                    <td>USD 30.0</td>
+                </tr>
+            {% endif %}
+            {% if ticket.seat.seat_type == 'First' %}
+                <tr>
+                    <th>First Class:</th>
+                    <td>USD 300.0</td>
+                </tr>
+            {% endif %}
+            {% if ticket.seat.seat_type == 'Business' %}
+                <tr>
+                    <th>Business Class:</th>
+                    <td>USD 200.0</td>
+                </tr>
+            {% endif %}
+            <tr class="tr-even">
+                <th style="width: 35%;">TOTAL</th>
+                <td style="width: 65%;">USD <strong>{{ ticket.price }}</strong></td>
+            </tr>
+
+        </table>
+    </div>
+</main>
+<p style="margin: 10px 0; font-size: .8em;">&#169; {{ current_year }} Django Air Service Inc. All rights is not
+    reserved. :)</p>
+<!-- 30 Kgs Check-in, 7 Kgs Cabin-->
+</body>
+</html>

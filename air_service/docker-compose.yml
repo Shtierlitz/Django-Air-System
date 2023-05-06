@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  pg_db:
+    container_name: pg_db
+    image:
+      postgres:14.7-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  django:
+    container_name: air_service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DJANGO_SETTINGS_MODULE: air_service.settings
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASS: ${DATABASE_PASS}
+      DATABASE_HOST: ${DATABASE_HOST}
+    entrypoint: /usr/src/air_service/entrypoint.dev.sh
+    volumes:
+      - .:/usr/src/air_service
+    ports:
+      - 8000:8000
+    depends_on:
+      - pg_db
+
+  celery-worker:
+    restart: on-failure
+    build:
+      context: ./
+    command: sh -c 'sleep 5 && celery -A air_service worker -l info -P eventlet'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - django
+      - redis
+
+  celery-beat:
+    restart: on-failure
+    build:
+      context: ./
+    command: sh -c 'sleep 10 && celery -A air_service beat -l INFO'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - django
+      - redis
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  pg_data:

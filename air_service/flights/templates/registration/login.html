@@ -1,0 +1,65 @@
+{% extends 'flights/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block content %}
+    {% load static %}
+    <section class="vh-100">
+        <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+            <div class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                        <div class="card" style="border-radius: 15px;">
+                            <div class="card-body p-5">
+                                <h2 class="text-uppercase text-center mb-5">{{ title }}</h2>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="form-outline mb-4">
+                                        {% if form.non_field_errors %}
+                                            <div class="alert alert-danger">
+                                                {% for error in form.non_field_errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        {% for field in form %}
+                                            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                                                <label for="{{ field.id_for_label }}"
+                                                       class="form-label">{{ field.label }}</label>
+                                                {{ field }}
+                                                {% for error in field.errors %}
+                                                    <div class="help-block">{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-block btn-lg gradient-custom-4">
+                                            Login
+                                        </button>
+                                    </div>
+                                    <br><br>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{% provider_login_url 'google' %}">
+                                            <img class="social-logo"
+                                                 src="{% static 'flights/images/google-logo.png' %}" alt="Google">
+                                        </a>
+                                    </div>
+                                    <p class="text-center text-muted mt-5 mb-0">Do not have an account? <a
+                                            href="{% url 'register' %}"
+                                            class="fw-bold text-body"><u>Register
+                                        here</u></a></p>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+{% endblock %}

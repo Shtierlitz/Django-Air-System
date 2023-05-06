@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link rel="icon" href="{% static 'flights/images/icon.ico' %}" type="image/x-icon"/>
+    <link type="text/css" href="{% static 'flights/boundle/styles1.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'flights/boundle/bootstrap.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="{% static 'flights/boundle/main.boundle.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    {#    <script src="{% static 'flights/js/stripe.js' %}"></script>#}
+
+</head>
+<body class="body-staff-image">
+{% block mainmenu %}
+    <nav class="navbar navbar-expand-xl navbar-light" style="background-color: #b8e5ff;">
+        <div class="container-fluid">
+            <div class="navbar-brand-personal"></div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                    aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <div class="navbar-nav-scroll">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0">
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Flights</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Staff actions <i
+                                        class="fas fa-cog"></i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item" href="{% url 'staff_flight_list' %}">Flights</a></li>
+                                <li><a class="dropdown-item" href="{% url 'staff_extra_list' %}">Extras</a></li>
+                                <li><a class="dropdown-item" href="{% url 'staff_aircraft_list' %}">Aircraft</a></li>
+                                <li><a class="dropdown-item" href="{% url 'staff_airport_list' %}">Airports</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'user_list' %}">Users Roles</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}" tabindex="-1" aria-disabled="true">About project</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar-nav-scroll ms-auto">
+                    <ul class="navbar-nav">
+                        {% if group is not None or request.user.is_superuser %}
+                            <li class="nav-item me-5">
+                                <a class="nav-link" style="color:green;" href="{% url 'staff_ticket_list' %}">
+                                    <i class="fas fa-star"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if search %}
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search..."
+                                       aria-label="Search" name="search">
+                                <button class="btn btn-outline-primary btn-custom" type="submit">Search</button>
+                            </form>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                            {% if group is not none %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'profile' request.user.id %}"
+                                       style="color: green">{{ user.username }} ({{ group }})</a>
+                                </li>
+                            {% elif request.user.is_superuser %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'profile' request.user.id %}"
+                                       style="color: red">{{ user.username }} (Admin)</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="{% url 'profile' request.user.id %}">{{ user.username }}</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item" >
+                                <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Registration</a>
+                            </li>
+                            <li class="nav-item" >
+                                <a class="nav-link"  href="{% url 'login' %}">Log in</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+{% endblock mainmenu %}
+{% block content %}{% endblock %}
+</body>
+<br>
+<br>
+<br>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start  text-muted" style="background-color: #d1eeff">
+    <!-- Section: Social media -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <!-- Left -->
+        <div class="me-5 d-none d-lg-block">
+            <span>Get connected with us on social networks:</span>
+        </div>
+        <!-- Left -->
+
+        <!-- Right -->
+        <div>
+            <a href="https://www.facebook.com/profile.php?id=100009034396916" class="me-4 text-reset">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://t.me/Rollbar" class="me-4 text-reset">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="https://www.instagram.com/igor_davydovskyi/" class="me-4 text-reset">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/igor-davydovskyi-98b137219/" class="me-4 text-reset">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/Shtierlitz" class="me-4 text-reset">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+        <!-- Right -->
+    </section>
+    <!-- Section: Social media -->
+
+    <!-- Section: Links  -->
+    <section class="">
+        <div class="container text-center text-md-start mt-5">
+            <!-- Grid row -->
+            <div class="row mt-3">
+                <!-- Grid column -->
+                <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                    <!-- Content -->
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        <i class="fas fa-plane-departure"></i> Django Air Service
+                    </h6>
+                    <p>
+                        Here you can use rows and columns to organize your footer content. Lorem ipsum
+                        dolor sit amet, consectetur adipisicing elit.
+                    </p>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <!-- Links -->
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        Products
+                    </h6>
+                    <p>
+                        <a href="https://django-allauth.readthedocs.io/en/latest/installation.html" class="text-reset">Django-allauth</a>
+                    </p>
+                    <p>
+                        <a href="https://stripe.com/docs" class="text-reset">Stripe</a>
+                    </p>
+                    <p>
+                        <a href="https://channels.readthedocs.io/en/latest/introduction.html" class="text-reset">Websocket</a>
+                    </p>
+                    <p>
+                        <a href="https://docs.celeryq.dev/en/stable/" class="text-reset">Celery</a>
+                    </p>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <!-- Links -->
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        Useful links
+                    </h6>
+                    <p>
+                        <a href="https://www.youtube.com/watch?v=5umK8mwmpWM!" class="text-reset">Render HTML to PDF</a>
+                    </p>
+                    <p>
+                        <a href="https://www.youtube.com/watch?v=eSaF8NXeNsA&t=165s" class="text-reset">Webpack tutorial</a>
+                    </p>
+                    <p>
+                        <a href="https://www.youtube.com/watch?v=sa32ZfIFHU8" class="text-reset">Django-roles tutorial</a>
+                    </p>
+                    <p>
+                        <a href="https://www.youtube.com/watch?v=EUZJcy_dfCs" class="text-reset">Django-Celery-Docker tutorial</a>
+                    </p>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <!-- Links -->
+                    <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                    <p><i class="fas fa-home me-3"></i> Kiev, Kiev 03134, UA</p>
+                    <p>
+                        <i class="fas fa-envelope me-3"></i>
+                        rollbar1990@gmail.com
+                    </p>
+                    <p><i class="fas fa-phone me-3"></i> +380 63 400 97 12</p>
+                    <p><i class="fas fa-print me-3"></i> +380 63 400 97 12</p>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+        </div>
+    </section>
+    <!-- Section: Links  -->
+
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2023 Copyright:
+        <a class="text-reset fw-bold" href="https://github.com/Shtierlitz">Shtierlitz</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+</html>

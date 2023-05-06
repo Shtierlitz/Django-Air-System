@@ -1,0 +1,15 @@
+{% extends 'flights/base.html' %}
+
+{% block content %}
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="card">
+                <div class="well well-sm">
+                    <br>
+                    <p style="text-align: center"><strong>Your link is invalid, please login again</strong></p>
+                    <p style="text-align: center"><a  href="{% url 'login' %}">Log in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

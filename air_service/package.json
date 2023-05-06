@@ -1,0 +1,31 @@
+{
+  "name": "air_service",
+  "version": "1.0.0",
+  "description": "Air service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "webpack"
+  ],
+  "author": "Shtierlitz",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.3",
+    "css-minimizer-webpack-plugin": "^5.0.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.7.5",
+    "style-loader": "^3.3.2",
+    "terser-webpack-plugin": "^5.3.7",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^5.0.2"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.7",
+    "jquery": "^3.6.4"
+  }
+}

@@ -1,0 +1,55 @@
+{% extends 'flights/base.html' %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row">
+            <div class="mx-auto">
+                <div class="card shadow border" style="background-color: #f0f9ff">
+                    <div class="card-body">
+                        <h2 class="pb-4 pt-4" style="text-align: center">Tickets</h2>
+                        {% if tickets|length == 0 %}
+                            <p class="text-center fw-semibold">Please purchase some tickets and return for more
+                                information :)</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table" style="border-collapse:collapse;">
+                                    <tr class="fw-bold">
+                                        <td>#</td>
+                                        <td>Flight</td>
+                                        <td>From - To</td>
+                                        <td>Code</td>
+                                        <td>Seat</td>
+                                        <td>Departure time - Arrival time</td>
+                                        <td>Price</td>
+                                        <td>Payment</td>
+                                        <td>Status</td>
+                                    </tr>
+                                    {% for i in tickets %}
+
+                                        <tr>
+                                            <td>{{ forloop.counter }}.</td>
+                                            <td><a href="{% url 'ticket' i.id %}">{{ i.flight.name }}</a></td>
+                                            <td>
+                                                {{ i.flight.origin_airport.code }}
+                                                - {{ i.flight.destination_airport.code }}</td>
+                                            <td><a href="{% url 'ticket' i.id %}">{{ i.code }}</a></td>
+                                            <td>
+                                                {{ i.seat.row_letter }}{{ i.seat.seat_number }} {{ i.seat.seat_type }}</td>
+                                            <td>{{ i.flight.departure_time }} - {{ i.flight.arrival_time }}</td>
+                                            <td><strong>{{ i.price }}$</strong></td>
+                                            <td style="{% if i.status == 'UNPAID' %}color: red;{% else %}color: green;{% endif %}">
+                                                <strong>{{ i.status }}</strong></td>
+                                            <td style="{% if i.expire == 'EXPIRED' %}color: red;{% else %}color: green;{% endif %}">
+                                                <strong>{{ i.expire }}</strong></td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

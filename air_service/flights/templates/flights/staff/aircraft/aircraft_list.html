@@ -1,0 +1,56 @@
+{% extends 'flights/staff/staff_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <div class="row justify-content-center">
+            <div class="col-md-auto mx-auto">
+                <div class="card shadow border d-flex justify-content-center" style="background-color: #f0f9ff">
+                    <div class="card-body">
+                        <h2 class="text-center my-4">Aircraft</h2>
+                        <div class="d-flex justify-content-center">
+                            <form method="POST" class="card p-1" autocapitalize="off"
+                                  style="background-color: #f5f5f5; max-width: 1500px; font-size: 16px">
+                                {% csrf_token %}
+                                <div class="w-100" style="background-color: inherit">
+                                    <table class="table">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Model</th>
+                                            <th>Aircraft type</th>
+                                            <th>Total seats</th>
+                                            <th>Del</th>
+                                        </tr>
+                                        {% for aircraft in object_list %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ aircraft.model }}</td>
+                                                <td>
+                                                    <a href="{% url 'staff_aircraft_update' aircraft.id %}">{{ aircraft.aircraft_type }}</a>
+                                                </td>
+                                                <td>{{ aircraft.total_seats }}</td>
+                                                <td><a href="{% url 'staff_aircraft_delete' aircraft.id %}"
+                                                       style="color: red"><i
+                                                        class="fas fa-times"></i></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                <div class="my-5 d-flex justify-content-center">
+                                    <a class="btn btn-outline-primary"
+                                       style="width: 150px; height: 50px; border-radius: 7px; line-height: 35px;"
+                                       href="{% url 'staff_aircraft_create' %}">
+                                        Create aircraft
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,101 @@
+
+.navbar-brand-personal {
+    padding-top: var(--bs-navbar-brand-padding-y);
+    padding-bottom: var(--bs-navbar-brand-padding-y);
+    margin-right: 0;
+    font-size: var(--bs-navbar-brand-font-size);
+    color: var(--bs-navbar-brand-color);
+    text-decoration: none;
+    white-space: nowrap;
+    background: url('../images/logo.png') no-repeat 15px 5px;
+    background-size: contain;
+
+    max-width: 400px;
+    width: 100%;
+    height: 50px;
+}
+
+.body-image {
+    background-image: url('../images/plane.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    max-width: 100%;
+    height: auto;
+}
+
+.body-staff-image {
+    background-image: url('../images/staff3.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    max-width: 100%;
+    height: auto;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: #fff;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #e3f2fd;
+    border-top: 1px solid #ddd;
+    visibility: hidden;
+}
+
+body.has-footer #footer {
+    visibility: visible;
+}
+
+.social-logo {
+    border-radius: 7px;
+    margin-right: 10px;
+}
+
+::placeholder {
+    opacity: 0.5 !important; /* Значение прозрачности */
+}
+
+.settings-icon {
+    position: absolute;
+    top: 10px; /* Расстояние от верхнего края контейнера */
+    right: 10px; /* Расстояние от правого края контейнера */
+    cursor: pointer; /* Изменение курсора на указатель при наведении */
+}
+
+/* Опционально: добавьте стили для изменения цвета при наведении */
+.settings-icon:hover .fas {
+    color: #007BFF; /* Цвет значка при наведении */
+}
+
+.custom-select-centered {
+    text-align-last: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.nav-item {
+    white-space: nowrap;
+  }
+
+@font-face {
+    font-family: 'lobster-regular';
+    src: url('../webfonts/Lobster-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Kaushan';
+    src: url('../webfonts/KaushanScript-Regular.ttf') format('truetype');
+}
+
+

@@ -1,0 +1,123 @@
+{% extends 'flights/staff/staff_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <div class="row justify-content-center"> <!-- Добавьте классы justify-content-center -->
+            <div class="col-md-auto mx-auto"> <!-- Исправлено на col-lg-12 -->
+                <div class="card shadow border d-flex justify-content-center" style="background-color: #f0f9ff">
+                    <div class="card-body">
+                        <h2 class="text-center my-4">Flights</h2>
+                        <div class="d-flex justify-content-center">
+                            <!-- Добавьте классы d-flex и justify-content-center -->
+                            <form method="POST" class="card p-1" autocapitalize="off"
+                                  style="background-color: #f5f5f5; max-width: 1500px; font-size: 16px">
+                                {% csrf_token %}
+                                <div class="w-100" style="background-color: inherit">
+                                    <div class="table-responsive">
+                                        <table class="table">
+
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Aircraft</th>
+                                                <th>Airports</th>
+                                                <th>Departure_time</th>
+                                                <th>Arrival_time</th>
+                                                <th>First class</th>
+                                                <th>Business class</th>
+                                                <th>Economy class</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Del</th>
+                                            </tr>
+                                            {% for flight in object_list %}
+
+                                                <tr>
+                                                    <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                                                    <td>{{ flight.name }}</td>
+                                                    <td>
+                                                        <a href="{% url 'staff_flight_update' flight.id %}">{{ flight.origin_airport.city }}
+                                                            - {{ flight.destination_airport.city }}</a></td>
+                                                    <td>{{ flight.departure_time }}</td>
+                                                    <td>{{ flight.arrival_time }}</td>
+                                                    <td>{{ flight.first_class_seats }}</td>
+                                                    <td>{{ flight.business_seats }}</td>
+                                                    <td>{{ flight.economy_seats }}</td>
+                                                    <td>{{ flight.total_seats }}</td>
+                                                    <td style="{% if flight.expire == 'ACTIVE' %}color: green;{% else %}color: red;{% endif %}">
+                                                        <strong>{{ flight.expire }}</strong></td>
+                                                    <td><a href="{% url 'staff_flight_delete' flight.id %}"
+                                                           style="color: red"><i
+                                                            class="fas fa-times"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=1" aria-label="First">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">First</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                                                   aria-label="Previous">
+                                                    <span aria-hidden="true">&lsaquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for page_num in paginator.page_range %}
+                                            {% if page_obj.number == page_num %}
+                                                <li class="page-item active"><a class="page-link"
+                                                                                href="?page={{ page_num }}">{{ page_num }}</a>
+                                                </li>
+                                            {% elif page_num > page_obj.number|add:"-3" and page_num < page_obj.number|add:"3" %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page={{ page_num }}">{{ page_num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_obj.next_page_number }}"
+                                                   aria-label="Next">
+                                                    <span aria-hidden="true">&rsaquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ paginator.num_pages }}"
+                                                   aria-label="Last">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Last</span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+
+                                <div class="my-5 d-flex justify-content-center">
+                                    <a class="btn btn-outline-primary"
+                                       style="width: 150px; height: 50px; border-radius: 7px; line-height: 35px;"
+                                       href="{% url 'staff_flight_create' %}">
+                                        Create flight
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

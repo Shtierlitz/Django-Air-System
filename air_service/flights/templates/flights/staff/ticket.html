@@ -1,0 +1,99 @@
+{% extends 'flights/staff/staff_base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow border" style="background-color: #f0f9ff">
+                    <div class="card-body">
+                        <h2 style="text-align: center">Check In and Boarding page</h2>
+                        <form method="POST" class="card p-5 mt-3 col-md-12" autocapitalize="off" novalidate
+                              style="background-color: #f5f5f5; max-width: 1000px; font-size: 16px">
+                            {% csrf_token %}
+                            <h3 class="text-center pb-4">Ticket: {{ ticket.code }}</h3>
+                            <div class="card w-100">
+                                <table class="table-bordered"
+                                       style="border-collapse:collapse; width: 85%; margin: 40px auto 0;">
+                                    <tr>
+                                        <td class="p-2">Ticket ID:</td>
+                                        <td class="p-2">{{ ticket.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Status:</td>
+                                        <td class="p-2"
+                                            style="{% if ticket.status == 'UNPAID' %}color: red;{% else %}color: green;{% endif %}">{{ ticket.status }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Client:</td>
+                                        <td class="p-2">{{ ticket.user.first_name }} {{ ticket.user.last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Flight:</td>
+                                        <td class="p-2">{{ ticket.flight.origin_airport.city }}
+                                            - {{ ticket.flight.destination_airport.city }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Booking date:</td>
+                                        <td class="p-2">{{ ticket.booking_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Boarding date:</td>
+                                        <td class="p-2">{{ ticket.flight.departure_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Arrival date:</td>
+                                        <td class="p-2">{{ ticket.flight.arrival_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Seat:</td>
+                                        <td class="p-2">
+                                            {{ ticket.seat.row_letter }}{{ ticket.seat.seat_number }} {{ ticket.seat.seat_type }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Extras:</td>
+                                        <td class="p-2">{% for i in ticket.tickets_extras.all %}{{ i }} {{ i.price }}$
+                                            {% if not forloop.last %} | {% endif %}{% endfor %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Check In:</td>
+                                        <td>{{ form.check_in }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2">Onboard:</td>
+                                        <td>{{ form.onboard }}</td>
+                                    </tr>
+
+                                </table>
+                                {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="d-flex align-items-center justify-content-center mt-4">
+                                            <div class="alert alert-danger">
+                                                {{ error }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div class="d-flex justify-content-between m-4">
+                                    <div>
+                                    <a href="{% url 'room' ticket.code %}" class="btn btn-outline-primary"
+                                            style="width: 150px; height: 50px; border-radius: 7px; line-height: 2.2;"><i class="fas fa-comments"></i> Client</a>
+                                        </div>
+                                    <div>
+                                    <button type="submit" class="btn btn-outline-success"
+                                            style="width: 150px; height: 50px; border-radius: 7px; line-height: 10px">
+                                        Save and return
+                                    </button>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
