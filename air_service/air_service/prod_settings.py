@@ -39,5 +39,5 @@ CELERY_IMPORTS = [
     'flights.tasks',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost:1337', 'http://52.29.27.103', 'ec2-52-29-27-103.eu-central-1.compute.amazonaws.com']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost:1337', 'http://52.29.27.103', 'http://ec2-52-29-27-103.eu-central-1.compute.amazonaws.com']
 
