@@ -34,15 +34,16 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 RECIPIENTS_EMAIL = os.environ.get('RECIPIENTS_EMAIL')
 
+# docker database specifics
+# type False to run in local machine without docker
+USE_POSTGRES = True
 
 try:
     from .local_settings import *
 except ImportError:
     from .prod_settings import *
 
-# docker database specifics
-# type False to run in local machine without docker
-USE_POSTGRES = True
+
 
 # Application definition
 
@@ -201,6 +202,30 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("redis", 6379) if USE_POSTGRES else ("127.0.0.1", 6379)],
+        },
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'channels': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'daphne': {
+            'handlers': ['console'],
+            'level': 'INFO',
         },
     },
 }

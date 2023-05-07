@@ -16,7 +16,7 @@
     {#    <script src="{% static 'flights/js/stripe.js' %}"></script>#}
 
 </head>
-<body class="body-image">
+<body class="body-image" data-user-id="{{ user.id }}">
 {% block mainmenu %}
     <nav class="navbar navbar-expand-xl navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid">

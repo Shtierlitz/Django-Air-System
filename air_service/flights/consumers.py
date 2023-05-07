@@ -1,17 +1,19 @@
 import json
-
+import logging
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from flights.models import User, Ticket
 from flights.utils import send_message
 
+logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
 
+        logger.info(f"WebSocket connected: {self.scope}")
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
@@ -22,6 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
 
+        logger.info(f"WebSocket disconnected: {self.scope}")
         # Send leave message
         username = self.scope['user'].username
         await self.send_leave_message(username)
@@ -44,6 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {"type": "chat_message", "message": message, "username": username},
             )
+        logger.info(f"WebSocket received message: {text_data}")
 
     # Receive message from room group
     async def chat_message(self, event):
@@ -159,17 +163,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return user.has_perm(permission)
 
 
-
 class StatusUpdateConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = f"user_{self.scope['user'].id}"
+        self.room_name = f"user_{self.scope['url_route']['kwargs']['user_id']}"
         self.room_group_name = f"status_updates_{self.room_name}"
 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-
+        logger.info(f"WebSocket connected: {self.scope}")
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -178,8 +181,11 @@ class StatusUpdateConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        logger.info(f"WebSocket disconnected: {self.scope}")
+
     async def receive(self, text_data):
         pass
 
     async def send_status_update(self, event):
         await self.send(text_data=json.dumps(event['content']))
+        logger.info(f"WebSocket send_status_update: {json.dumps(event['content'])}")

@@ -1,4 +1,9 @@
-const socket = new WebSocket('ws://127.0.0.1:8000/ws/status_updates/');
+
+const { hostname, port } = window.location;
+const userId = document.body.getAttribute('data-user-id');
+const socketUrl = `ws://${hostname}:${port}/ws/status_updates/${userId}/`;
+console.log(hostname, port)
+const socket = new WebSocket(socketUrl);
 console.log("выполнился билет")
         // Listen for messages
         socket.addEventListener('message', (event) => {
