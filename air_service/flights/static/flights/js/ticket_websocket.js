@@ -1,12 +1,11 @@
-
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const fullHost = window.location.host;
-const userId = document.body.getAttribute('data-user-id');
-const socketUrl = `${protocol}//${fullHost}/ws/status_updates/${userId}/`;
-console.log(socketUrl, "адрес теккущей ссылки")
+const hostname = window.location.hostname;
+const port = window.location.port;
+const socketUrl = `${protocol}//${hostname}:${port}/ws/status_updates/`;
+console.log(socketUrl, "урла 1")
 
 const socket = new WebSocket(socketUrl);
-console.log("выполнился билет")
+console.log(socketUrl, "урла 2")
         // Listen for messages
         socket.addEventListener('message', (event) => {
             console.log('WebSocket message received:', event);

@@ -36,7 +36,7 @@ RECIPIENTS_EMAIL = os.environ.get('RECIPIENTS_EMAIL')
 
 # docker database specifics
 # type False to run in local machine without docker
-USE_POSTGRES = True
+USE_POSTGRES = False
 
 try:
     from .local_settings import *
