@@ -78,7 +78,7 @@ services:
       - "6379:6379"
 
   certbot:
-    image: certbot/certbot-nginx
+    image: certbot/dns-route53
     container_name: certbot
     volumes:
       - .:/usr/src/app
