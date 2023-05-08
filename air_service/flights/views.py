@@ -1,3 +1,5 @@
+import smtplib
+
 from django.contrib import messages
 from django.contrib.auth import logout, get_user_model, login, authenticate
 from django.contrib.auth.backends import ModelBackend
@@ -66,7 +68,7 @@ class PaymentView(LoginRequiredMixin, BaseDataMixin, View):
         context['form'] = form
         context['flight'] = get_one_flight(ticket.flight.id)
         context['flight_id'] = ticket.flight.id
-        context['extras'] = self.request.session.get('extras')
+        # context['extras'] = self.request.session.get('extras')
         context['seat'] = ticket.seat
         card_number = request.POST['card_number']
         exp_month = request.POST['exp_month']
@@ -97,7 +99,12 @@ class PaymentView(LoginRequiredMixin, BaseDataMixin, View):
                 messages.error(request, user_message)
                 return render(request, self.template_name, context=context)
             except Exception as e:
-                messages.error(request, "Unknown error: {}".format(e))
+                if isinstance(e, smtplib.SMTPRecipientsRefused):
+                    recipients = ', '.join([f"{key}: {value}" for key, value in e.recipients.items()])
+                    messages.error(request, f"Unknown error: {e.__class__.__name__}: Recipients refused: {recipients}")
+                else:
+                    messages.error(request, f"Unknown error: {e.__class__.__name__}: {str(e)}")
+
                 return render(request, self.template_name, context=context)
 
             # Создайте платеж
@@ -137,7 +144,12 @@ class PaymentView(LoginRequiredMixin, BaseDataMixin, View):
                 messages.error(request, user_message)
                 return render(request, self.template_name, context=context)
             except Exception as e:
-                messages.error(request, "Unknown error: {}".format(e))
+                if isinstance(e, smtplib.SMTPRecipientsRefused):
+                    recipients = ', '.join([f"{key}: {value}" for key, value in e.recipients.items()])
+                    messages.error(request, f"Unknown error: {e.__class__.__name__}: Recipients refused: {recipients}")
+                else:
+                    messages.error(request, f"Unknown error: {e.__class__.__name__}: {str(e)}")
+
                 return render(request, self.template_name, context=context)
         print('not valid')
         return render(request, self.template_name, context=context)

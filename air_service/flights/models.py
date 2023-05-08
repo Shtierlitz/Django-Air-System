@@ -61,6 +61,7 @@ class Ticket(models.Model):
     def __str__(self):
         return f"Ticket of {self.user}"
 
+
 class ClassType(models.TextChoices):
     ECONOMY = '1.2'
     BUSINESS = '2.3'
@@ -104,6 +105,7 @@ class Seat(models.Model):
         A = 'A'
         B = 'B'
         C = 'C'
+
     row_letter = models.CharField(max_length=1, choices=SeatRows.choices, null=True)
     seat_number = models.IntegerField(null=True)
     seat_type = models.CharField(max_length=50, choices=TextClassType.choices, default=TextClassType.ECONOMY)
