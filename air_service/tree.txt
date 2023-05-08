@@ -1,0 +1,83 @@
+Структура папок
+Серийный номер тома: DA49-735E
+E:.
+|   .dockerignore
+|   .env
+|   db.sqlite3
+|   docker-compose.prod.yml
+|   docker-compose.yml
+|   Dockerfile
+|   Dockerfile.prod
+|   entrypoint.dev.sh
+|   entrypoint.prod.sh
+|   manage.py
+|   package-lock.json
+|   package.json
+|   README.md
+|   requirements.txt
+|   tree.txt
+|   webpack.config.js
+|   
++---air_service
+|   |   asgi.py
+|   |   celery.py
+|   |   local_settings.py
+|   |   prod_settings.py
+|   |   settings.py
+|   |   urls.py
+|   |   wsgi.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           asgi.cpython-310.pyc
+|           celery.cpython-310.pyc
+|           local_settings.cpython-310.pyc
+|           prod_settings.cpython-310.pyc
+|           settings.cpython-310.pyc
+|           urls.cpython-310.pyc
+|           wsgi.cpython-310.pyc
+|           __init__.cpython-310.pyc
+|           
++---flights
+|   |   admin.py
+|   |   apps.py
+|   |   consumers.py
+|   |   default_data.py
+|   |   forms.py
+|   |   models.py
+|   |   routing.py
+|   |   staff_forms.py
+|   |   staff_views.py
+|   |   tasks.py
+|   |   tests.py
+|   |   urls.py
+|   |   utils.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   +---migrations
+|   |   |   0001_initial.py
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           0001_initial.cpython-310.pyc
+|   |           __init__.cpython-310.pyc
+|   |           
+|   +---static
+|   |   \---flights
+|   |               
+|   +---templates
+|   |   +---flights
+|   +---tests
++---nginx
+|       Dockerfile
+|       nginx.conf
+|       ssl-dhparams.pem
++---src
+|       chat_index.js
+|       index.js
+|       ticket_index.js
+|       
+\---static
+ 
+                
