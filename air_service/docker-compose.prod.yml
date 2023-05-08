@@ -85,7 +85,7 @@ services:
       - ./letsencrypt:/etc/letsencrypt
       - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
 #    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
-    command: certonly --webroot --email rollbar1990@gmail.com --agree-tos --no-eff-email -d django-air-foxstudent101801.pp.ua -d www.django-air-foxstudent101801.pp.ua -w /usr/src/app
+    command: certonly --webroot --email rollbar1990@gmail.com --agree-tos --no-eff-email -d django-air-foxstudent101801.pp.ua -d www.django-air-foxstudent101801.pp.ua -w /usr/src/app/.well-known/acme-challenge
     depends_on:
       - nginx
 
