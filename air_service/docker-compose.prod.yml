@@ -89,5 +89,6 @@ services:
       - nginx
 
 volumes:
+  www-html:
   pg_data:
   letsencrypt:
