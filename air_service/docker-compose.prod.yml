@@ -39,7 +39,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - etc-letsencrypt:/etc/letsencrypt
+      - ./letsencrypt:/etc/letsencrypt
       - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
     ports:
       - 80:80
