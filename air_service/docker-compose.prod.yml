@@ -36,19 +36,19 @@ services:
     depends_on:
       - pg_db
 
-  nginx:
-    build: ./nginx
-    volumes:
-      - ./static:/usr/src/app/static
-      - ./media:/usr/src/app/media
-      - ./.well-known:/usr/src/app/.well-known
-      - ./letsencrypt:/etc/letsencrypt
-      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - daphne
+#  nginx:
+#    build: ./nginx
+#    volumes:
+#      - ./static:/usr/src/app/static
+#      - ./media:/usr/src/app/media
+#      - ./.well-known:/usr/src/app/.well-known
+#      - ./letsencrypt:/etc/letsencrypt
+#      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
+#    ports:
+#      - 80:80
+#      - 443:443
+#    depends_on:
+#      - daphne
 
   celery-worker:
     restart: on-failure
@@ -79,17 +79,17 @@ services:
     ports:
       - "6379:6379"
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - .:/usr/src/app
-      - ./letsencrypt:/etc/letsencrypt
-      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
-#    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
-    command: certonly --webroot --email rollbar1990@gmail.com --agree-tos --no-eff-email -d django-air-foxstudent101801.pp.ua -d www.django-air-foxstudent101801.pp.ua -w /usr/src/app/.well-known/acme-challenge
-    depends_on:
-      - nginx
+#  certbot:
+#    image: certbot/certbot
+#    container_name: certbot
+#    volumes:
+#      - .:/usr/src/app
+#      - ./letsencrypt:/etc/letsencrypt
+#      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
+##    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+#    command: certonly --webroot --email rollbar1990@gmail.com --agree-tos --no-eff-email -d django-air-foxstudent101801.pp.ua -d www.django-air-foxstudent101801.pp.ua -w /usr/src/app/.well-known/acme-challenge
+#    depends_on:
+#      - nginx
 
 volumes:
   pg_data:
