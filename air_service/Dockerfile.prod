@@ -41,11 +41,8 @@ COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*
 
-# Добавьте следующие строки перед COPY ./ $APP_HOME/
 RUN mkdir -p /usr/src/app/.well-known/acme-challenge
-RUN chown -R 65534:65534 /usr/src/app
 
-COPY --from=builder /usr/src/app/.well-known /usr/src/app/.well-known
 COPY ./ $APP_HOME/
 
 
