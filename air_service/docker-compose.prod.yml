@@ -38,6 +38,9 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
     ports:
       - 80:80
       - 443:443
@@ -73,5 +76,16 @@ services:
     ports:
       - "6379:6379"
 
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+      - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+    depends_on:
+      - nginx
+
 volumes:
   pg_data:
+  letsencrypt:
