@@ -39,6 +39,7 @@ services:
   nginx:
     build: ./nginx
     volumes:
+      - .:/usr/src/app
       - ./letsencrypt:/etc/letsencrypt
       - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
     ports:
@@ -80,15 +81,14 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
+      - .:/usr/src/app
       - ./letsencrypt:/etc/letsencrypt
       - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
-      - www-html:/var/www/html
 #    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
     command: certonly --webroot --webroot-path=/var/www/html --email rollbar1990@gmail.com --agree-tos --no-eff-email --staging -d django-air-foxstudent101801.pp.ua
     depends_on:
       - nginx
 
 volumes:
-  www-html:
   pg_data:
   letsencrypt:
