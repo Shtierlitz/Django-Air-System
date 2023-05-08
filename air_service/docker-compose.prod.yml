@@ -39,7 +39,9 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - .:/usr/src/app
+      - ./static:/usr/src/app/static
+      - ./media:/usr/src/app/media
+      - ./.well-known:/usr/src/app/.well-known
       - ./letsencrypt:/etc/letsencrypt
       - ./nginx/ssl-dhparams.pem:/etc/ssl/certs/dhparam.pem
     ports:

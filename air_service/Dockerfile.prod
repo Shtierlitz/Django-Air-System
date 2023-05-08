@@ -45,7 +45,9 @@ RUN pip install --no-cache /wheels/*
 RUN mkdir -p /usr/src/app/.well-known/acme-challenge
 RUN chown -R 65534:65534 /usr/src/app
 
+COPY --from=builder /usr/src/app/.well-known /usr/src/app/.well-known
 COPY ./ $APP_HOME/
+
 
 RUN chown -R Igrerio:air $APP_HOME
 
