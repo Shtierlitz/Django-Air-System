@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '52.29.27.103', 'ec2-52-29-27-103.eu-central-1.compute.amazonaws.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '3.121.241.190', 'django-air-foxstudent101801.pp.ua', 'www.django-air-foxstudent101801.pp.ua']
 
 DATABASES = {
     'default': {
@@ -39,5 +39,11 @@ CELERY_IMPORTS = [
     'flights.tasks',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost:1337', 'http://52.29.27.103', 'http://ec2-52-29-27-103.eu-central-1.compute.amazonaws.com']
+CSRF_TRUSTED_ORIGINS = [
+    '127.0.0.1',
+    'localhost',
+    '3.121.241.190',
+    'www.django-air-foxstudent101801.pp.ua',
+    'django-air-foxstudent101801.pp.ua',
+]
 
