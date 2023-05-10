@@ -35,7 +35,7 @@ RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 RUN apt-get update -y \
-     && apt-get install -y netcat
+     && apt-get install -y vim netcat
 
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .

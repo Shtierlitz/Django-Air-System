@@ -40,10 +40,10 @@ CELERY_IMPORTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    '127.0.0.1',
-    'localhost',
-    '3.121.241.190',
-    'www.django-air-foxstudent101801.pp.ua',
-    'django-air-foxstudent101801.pp.ua',
+    'http://127.0.0.1',
+    'http://localhost',
+    'http://3.121.241.190',
+    'https://www.django-air-foxstudent101801.pp.ua',
+    'https://django-air-foxstudent101801.pp.ua',
 ]
 

@@ -178,7 +178,7 @@ SITE_ID = 1
 # ACCOUNT_USERNAME_REQUIRED = True
 # ACCOUNT_AUTHENTICATION_METHOD = False
 ACCOUNT_SIGNUP_REDIRECT_URL = "home"
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -201,7 +201,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis", 6379) if USE_POSTGRES else ("127.0.0.1", 6379)],
+            'hosts': [('redis', 6379) if USE_POSTGRES else ('127.0.0.1', 6379)],
         },
     },
 }
