@@ -1,3 +1,5 @@
+# air_service/flights/staff_forms.py
+
 import datetime
 
 from django.forms import DateTimeInput
@@ -78,7 +80,10 @@ class FlightCreateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        aircraft = cleaned_data['aircraft']
+        if self.errors:
+            return cleaned_data
+
+        aircraft = cleaned_data.get('aircraft', None)
         clean_or_errors(cleaned_data, aircraft, self.add_error)
         return cleaned_data
 
@@ -89,8 +94,9 @@ class FlightCreateForm(forms.ModelForm):
             flight.save()
             eta = flight.departure_time
             task = flight_expiration_task.apply_async(args=[flight.id], eta=eta)  # Передайте flight.id, а не сам объект flight
-            flight.task_id = task.id
-            flight.save()
+            if task is not None:
+                flight.task_id = task.id
+                flight.save()
 
         return flight
 
@@ -115,6 +121,7 @@ class FlightUpdateForm(forms.ModelForm):
                 flight.expire = Expiring.ACTIVE
                 flight.save()
 
+
             # Отменить текущую задачу
             if flight.task_id:
                 try:
@@ -126,8 +133,9 @@ class FlightUpdateForm(forms.ModelForm):
             # Создать новую задачу с обновленным временем отправления
             eta = flight.departure_time
             task = flight_expiration_task.apply_async(args=[flight.id], eta=eta)
-            flight.task_id = task.id
-            flight.save()
+            if task is not None:
+                flight.task_id = task.id
+                flight.save()
 
             # Удалить задачу на билете и создать новую
             tickets = Ticket.objects.filter(flight=flight.id)
@@ -154,6 +162,8 @@ class FlightUpdateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if self.errors:
+            return cleaned_data
         aircraft = self.instance.aircraft
         clean_or_errors(cleaned_data, aircraft, self.add_error)
         return cleaned_data

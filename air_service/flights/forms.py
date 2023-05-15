@@ -1,11 +1,16 @@
-import secrets
+# air_service/flights/forms.py
 
+import secrets
+from allauth.socialaccount.forms import SignupForm
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from flights.models import *
 from django import forms
 from flights.tasks import ticket_expiration_task
+
+import re
+from django.core.exceptions import ValidationError
 
 
 class RegisterUserForm(UserCreationForm):
@@ -64,13 +69,15 @@ class StripeForm(forms.Form):
         card_number = cleaned_data.get('card_number')
         cvc = cleaned_data.get('cvc')
 
-        new_number = card_number.replace("-", '')
+        if card_number is not None:
+            new_number = card_number.strip().replace("-", '')
+            if len(new_number) < 16 or len(new_number) > 16:
+                self.add_error('card_number', "The card number must contain 16 numbers.")
 
-        if len(new_number) < 16 or len(new_number) > 16:
-            self.add_error('card_number', "The card number must contain 16 numbers.")
-
-        if not str(new_number).isdigit():
-            self.add_error('card_number', 'The card number must consist of numbers and "-" only.')
+            if not str(new_number).isdigit():
+                self.add_error('card_number', 'The card number must consist of numbers and "-" only.')
+        else:
+            self.add_error('card_number', 'This field is required and must consist of numbers and "-" only.')
 
         if len(cvc) != 3:
             self.add_error('cvc', 'The CVC code must contain 3 numbers.')
@@ -257,8 +264,70 @@ class ChangeProfileForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Input new phone number..."}), required=False)
     gender = forms.ChoiceField(choices=User.Genders.choices, widget=forms.Select(attrs={'class': 'form-control'}), required=False)
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if phone and not re.match(r'^\+?\d{10,15}$', phone):  # Проверка на соответствие шаблону номера телефона
+            raise ValidationError('Enter a valid phone number')
+        return phone
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name and not re.match(r'^[a-zA-Z]+$', first_name):  # Проверка на соответствие шаблону имени
+            raise ValidationError('First name should contain only Latin characters')
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name and not re.match(r'^[a-zA-Z]+$', last_name):  # Проверка на соответствие шаблону фамилии
+            raise ValidationError('Last name should contain only Latin characters')
+        return last_name
+
 
 class AirportForm(forms.ModelForm):
     class Meta:
         model = Airport
         fields = ['name', 'code', 'city', 'country']
+
+
+class GoogleSignUpForm(SignupForm):
+    email = forms.EmailField(disabled=True, required=False)
+    first_name = forms.CharField(max_length=30, label='First name (latin only)')
+    last_name = forms.CharField(max_length=30, label='Last name (latin only)')
+    phone = forms.CharField(max_length=20, label='Phone number')
+    gender = forms.ChoiceField(choices=User.Genders.choices, widget=forms.Select(attrs={'class': 'form-control'}),
+                               required=False)
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if phone and not re.match(r'^\+?\d{10,15}$', phone):  # Проверка на соответствие шаблону номера телефона
+            raise ValidationError('Enter a valid phone number')
+        return phone
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name and not re.match(r'^[a-zA-Z]+$', first_name):  # Проверка на соответствие шаблону имени
+            raise ValidationError('First name should contain only Latin characters')
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name and not re.match(r'^[a-zA-Z]+$', last_name):  # Проверка на соответствие шаблону фамилии
+            raise ValidationError('Last name should contain only Latin characters')
+        return last_name
+
+
+    def save(self, request):
+        # Ensure you call the parent class's save.
+        # .save() returns a User object.
+        user = super(GoogleSignUpForm, self).save(request)
+
+        # Update the user's first_name and last_name from the form data
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.phone = self.cleaned_data['phone']
+        user.gender = self.cleaned_data['gender']
+        user.email_verify = True
+        user.save()
+
+        return user
+

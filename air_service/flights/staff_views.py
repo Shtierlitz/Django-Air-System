@@ -125,7 +125,6 @@ class TicketStaffView(BaseDataMixin, FormView):
 
         if len(form.non_field_errors()) != 0:
             return self.form_invalid(form)
-
         self.success_url = reverse_lazy('staff_ticket_list')
         return super().form_valid(form)
 

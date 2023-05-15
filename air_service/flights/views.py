@@ -16,7 +16,7 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView,
 
 from django.conf import settings
 from flights.forms import RegisterUserForm, LoginUserForm, TicketConfirmForm, SeatForm, \
-    StripeForm, ChangeProfileForm
+    StripeForm, ChangeProfileForm, GoogleSignUpForm
 from flights.models import *
 from flights.utils import token_generator, get_one_flight, render_to_pdf, BaseDataMixin, send_ticket_to_email, \
     FlightMixin
@@ -245,7 +245,7 @@ class BookingConfirmView(LoginRequiredMixin, BaseDataMixin, FormView):
         context['flight'] = get_one_flight(self.kwargs['flight_id'])
         context['flight_id'] = self.kwargs['flight_id']
         context['user'] = self.request.user
-        price = int(float(self.request.session.get('price')))
+        price = int(float(self.request.session.get('price', 0.0)))
         context['price'] = price
         extras = data.get('extras')
         context['extras'] = [Extra.objects.get(pk=i) for i in extras]
@@ -350,7 +350,7 @@ class TicketView(LoginRequiredMixin, BaseDataMixin, DetailView):
             ticket.flight.users.remove(request.user.id)
             ticket.flight.save()
             ticket.delete()
-            return redirect(reverse('profile'))
+            return redirect(reverse('profile_tickets'))
 
 
 class AboutView(BaseDataMixin, TemplateView):

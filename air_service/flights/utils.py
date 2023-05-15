@@ -1,4 +1,7 @@
+# air_service/flights/utils.py
+
 import os
+from datetime import datetime
 
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
@@ -129,7 +132,7 @@ def send_message(name, email, content, subject: str):
     text_content = text.render(context)
     html_content = html.render(context)
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [os.environ.get('EMAIL_HOST_USER')])
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
 
@@ -221,14 +224,14 @@ def clean_or_errors(cleaned_data, aircraft, add_error):
     departure_time = cleaned_data['departure_time']
     arrival_time = cleaned_data['arrival_time']
 
-    today = timezone.make_aware(datetime.datetime.today())
+    today = timezone.make_aware(datetime.today())
     today = today.replace(microsecond=0)
     if departure_time <= today:
         add_error('departure_time',
                   "The departure time must not be earlier than"
                   " the next day from the creation of the flight.")
 
-    if arrival_time < departure_time or arrival_time <= timezone.make_aware(datetime.datetime.today()):
+    if arrival_time < departure_time or arrival_time <= timezone.make_aware(datetime.today()):
         add_error('arrival_time',
                   "The arrival time must not be earlier than"
                   " the next day from the creation of the flight and not earlier then departure time.")
@@ -328,21 +331,3 @@ class FlightMixin:
             )
         ).order_by('-priority', 'departure_time', '-aircraft__total_seats')
         return queryset
-
-
-    # def search_flights(self, search_query):
-    #     query = Flight.objects.all()
-    #     flights = {}
-    #     for i in query:
-    #         if i.code == search_query.strip().upper():
-    #             flights.append(i)
-    #         elif i.
-
-
-# def get_extra_all():
-#     extras = Extra.objects.filter(available=True)
-#     extra_tuple = () #('', '---------'),
-#     for i, e in enumerate(extras):
-#         inner_tuple = (e.price, e)
-#         extra_tuple += (inner_tuple,)
-#     return extra_tuple

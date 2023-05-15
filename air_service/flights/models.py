@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -78,6 +76,7 @@ class Extra(models.Model):
     available = models.BooleanField(default=True)
     price = models.FloatField(max_length=50, default=10)
     tickets = models.ManyToManyField(Ticket, related_name='tickets_extras')
+
     def __str__(self):
         return self.name
 
@@ -101,6 +100,7 @@ class Seat(models.Model):
         permissions = [
             ("can_manage_seats", "Can manage seats"),
         ]
+
     class SeatRows(models.TextChoices):
         A = 'A'
         B = 'B'
@@ -159,7 +159,8 @@ class Aircraft(models.Model):
         ]
 
     model = models.CharField(max_length=255, null=True, unique=True)
-    aircraft_type = models.CharField(max_length=255, choices=AircraftTypes.choices, default=AircraftTypes.BOEING, null=True)
+    aircraft_type = models.CharField(max_length=255, choices=AircraftTypes.choices,
+                                     default=AircraftTypes.BOEING, null=True)
     total_seats = models.IntegerField(null=True)
 
     def __str__(self):
@@ -178,9 +179,3 @@ class Airport(models.Model):
 
     def __str__(self):
         return f'{self.name}, {self.city}, {self.code}, {self.country}'
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+# air_service/settings.py
 """
 Django settings for air_service project.
 
@@ -35,11 +36,11 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 RECIPIENTS_EMAIL = os.environ.get('RECIPIENTS_EMAIL')
 
 # docker database specifics
-# type False to run in local machine without docker
+# type False to run in local machine without docker or to run tests
 USE_POSTGRES = False
 
 try:
-    from .local_settings import *
+    from .local_settings import *   # undo comment in .dockerignore if you want to start container localy
 except ImportError:
     from .prod_settings import *
 
@@ -92,7 +93,7 @@ ROOT_URLCONF = 'air_service.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'flights/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -170,14 +171,17 @@ LOGIN_REDIRECT_URL = 'home'
 
 SITE_ID = 1
 # ACCOUNT_EMAIL_VERIFICATION = 'none'  # Подтверждение email не требуется
-# ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Аутентификация по имени пользователя или email
-# ACCOUNT_EMAIL_REQUIRED = True  # Требование email для всех пользователей
-# SOCIALACCOUNT_AUTO_SIGNUP = True  # Разрешить создание новых пользователей во время аутентификации
-# SOCIALACCOUNT_QUERY_EMAIL = True  # Запрос email у Google
-# SOCIALACCOUNT_STORE_TOKENS = True  # Сохранять токены доступа и обновления
-# ACCOUNT_USERNAME_REQUIRED = True
-# ACCOUNT_AUTHENTICATION_METHOD = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Аутентификация по имени пользователя или email
+ACCOUNT_EMAIL_REQUIRED = True  # Требование email для всех пользователей
+SOCIALACCOUNT_AUTO_SIGNUP = False  # Разрешить создание новых пользователей во время аутентификации
+SOCIALACCOUNT_QUERY_EMAIL = True  # Запрос email у Google
+SOCIALACCOUNT_STORE_TOKENS = True  # Сохранять токены доступа и обновления
+ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = False
 ACCOUNT_SIGNUP_REDIRECT_URL = "home"
+SOCIALACCOUNT_FORMS  = {'signup': 'flights.forms.GoogleSignUpForm'}
+
+ACCOUNT_SIGNUP_TEMPLATE = 'registration/signup.html'
 # ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -201,7 +205,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            'hosts': [('redis', 6379) if USE_POSTGRES else ('127.0.0.1', 6379)],
+            "hosts": [("redis", 6379) if USE_POSTGRES else ("127.0.0.1", 6379)],
         },
     },
 }

@@ -28,28 +28,46 @@ You will also need to create `.env` file and place it in the root of the project
 import os
 from pathlib import Path
 
+from air_service.settings import USE_POSTGRES
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if USE_POSTGRES:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DATABASE_NAME'),
+            'USER': os.environ.get('DATABASE_USER'),
+            'PASSWORD': os.environ.get('DATABASE_PASS'),
+            'HOST': os.environ.get('DATABASE_HOST'),
+            'PORT': '5432',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # STATIC_DIR = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = []
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = []
 
 # celery
-REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
-CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
-CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+if USE_POSTGRES:
+    REDIS_HOST = '0.0.0.0'
+    CELERY_BROKER_URL = f'redis://redis:{REDIS_PORT}/0'
+    CELERY_RESULT_BACKEND = f'redis://redis:{REDIS_PORT}/0'
+else:
+    REDIS_HOST = '127.0.0.1'
+    CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
+    CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -67,6 +85,7 @@ CACHES = {
     }
 }
 CELERY_RESULT_EXTENDED = True
+
 ```
 
 ### Required contents of the .env file:
@@ -130,62 +149,53 @@ To run tests from the localhost, type in the folder next to the file `manage.py`
 python manage.py test flights.tests
 ```
 
+## Docker localhost
+To use docker in localhost you need to have `local_settings.py` behind yours `settings.py` file.
+```bash
+run docker-compose -f docker-compose.yml up --build
+````
 
-## Test and Deploy
+## Docker localhost
+To use docker in localhost you need to have `local_settings.py` behind yours `settings.py` file.
+```bash
+run docker-compose up --build
+````
 
-Use the built-in continuous integration in GitLab.
+## Docker deploy
+To use docker to deploy project on server you need to delete `local_settings.py`.  
+Find server and create an instance.  
+Run next commands:  
+```bash
+sudo apt-get update  
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common  
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -  
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  
+sudo apt-get update  
+sudo apt-get install docker-ce  
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"  
+sudo chmod +x /usr/local/bin/docker-compose  
+docker --version  
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Now clone repository:
+```bash
+sudo git clone https://github.com/Shtierlitz/Django-Air-System.git
+```
+### Dont forget to create .env file
+### Now you can run Docker container in your server machine:
+```bash
+sudo chmod +x entrypoint.prod.sh
+sudo chmod +x init-letsencrypt.sh 
+sudo ./init-letsencrypt.sh # creates a ssl certificate
+sudo docker-compose -f docker-compose.prod.yml up -d --build
+```
+# Sources 
+Celery https://docs.celeryq.dev/en/stable/getting-started/introduction.html  
+Docker https://docs.docker.com/  
+Redis https://redis.io/docs/getting-started/installation/install-redis-on-windows/  
+DjangoSchool https://www.youtube.com/@DjangoSchool  
+Websocket https://channels.readthedocs.io/en/latest/introduction.html  
+Stripe https://stripe.com/docs  
+Django-allauth https://django-allauth.readthedocs.io/en/latest/installation.html  
+Render html to pdf https://www.youtube.com/watch?v=5umK8mwmpWM
 
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
