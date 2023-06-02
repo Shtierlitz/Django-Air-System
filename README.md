@@ -129,15 +129,15 @@ sudo service redis-server start
 redis-cli
 ```
 
-# Celery 
-###Celery Worker run on Windows
+# Celery  
+### Celery Worker run on Windows
 Run in new terminal:
 ```bash
 pip install eventlet  
 celery -A air_service worker -l info -P eventlet
 ```
 
-###Celery beat
+### Celery beat
 Run in new terminal:
 ```bash
 celery -A air_service beat -l info 
