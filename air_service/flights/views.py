@@ -1,4 +1,5 @@
 import smtplib
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import logout, get_user_model, login, authenticate
@@ -62,7 +63,7 @@ class PaymentView(LoginRequiredMixin, BaseDataMixin, View):
         context = self.get_user_context()
         ticket = Ticket.objects.get(pk=ticket_id)
         context['ticket'] = ticket
-        context['current_year'] = str(datetime.datetime.now().year)[2:]
+        context['current_year'] = str(datetime.now().year)[2:]
         context['user'] = request.user
         form = self.form_class(request.POST, context=context)
         context['form'] = form
@@ -126,7 +127,7 @@ class PaymentView(LoginRequiredMixin, BaseDataMixin, View):
                 # соответствующее уведомление об успешной оплате
                 data = {
                     'ticket': ticket,
-                    'current_year': datetime.datetime.now().year,
+                    'current_year': datetime.now().year,
                     'flight': get_one_flight(ticket.flight.id)
                 }
                 subject = 'Payment successful!'
@@ -441,7 +442,7 @@ class ViewPDF(View):
         ticket = Ticket.objects.get(pk=ticket_id)
         data = {
             'ticket': ticket,
-            'current_year': datetime.datetime.now().year,
+            'current_year': datetime.now().year,
             'flight': get_one_flight(ticket.flight.id)
         }
         pdf = render_to_pdf('flights/pdf_template/pdf_template.html', data)
@@ -455,7 +456,7 @@ class DownloadPDF(View):
         ticket = Ticket.objects.get(pk=ticket_id)
         data = {
             'ticket': ticket,
-            'current_year': datetime.datetime.now().year,
+            'current_year': datetime.now().year,
             'flight': get_one_flight(ticket.flight.id)
         }
         pdf = render_to_pdf('flights/pdf_template/pdf_template.html', data)
@@ -474,7 +475,7 @@ class SendTicket(View):
         ticket = Ticket.objects.get(pk=ticket_id)
         data = {
             'ticket': ticket,
-            'current_year': datetime.datetime.now().year,
+            'current_year': datetime.now().year,
             'flight': get_one_flight(ticket.flight.id)
         }
         subject = f'Ticket: {ticket.code}'

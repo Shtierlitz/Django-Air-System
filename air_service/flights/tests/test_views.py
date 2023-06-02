@@ -9,7 +9,7 @@ from django.test import override_settings
 from flights.forms import ChangeProfileForm
 from flights.models import Ticket, Flight, Aircraft, AircraftTypes, Airport, Extra, Seat, TextClassType, Expiring, \
     Payment, User, Status
-l
+
 
 # User = get_user_model()
 

@@ -122,7 +122,8 @@ python manage.py runserver
 
 ## Redis cli run on Windows
 Install Linux on Windows with WSL https://learn.microsoft.com/en-us/windows/wsl/install  
-Install and run Redis cli https://redis.io/docs/getting-started/installation/install-redis-on-windows/
+Install and run Redis cli https://redis.io/docs/getting-started/installation/install-redis-on-windows/  
+Activate Ubuntu console and run:
 ```bash 
 sudo service redis-server start  
 redis-cli
@@ -133,13 +134,13 @@ redis-cli
 Run in new terminal:
 ```bash
 pip install eventlet  
-celery -A djangoweatherreminder worker -l info -P eventlet
+celery -A air_service worker -l info -P eventlet
 ```
 
 ###Celery beat
 Run in new terminal:
 ```bash
-celery -A djangoweatherreminder beat -l info 
+celery -A air_service beat -l info 
 ```
 
 ## Test 
