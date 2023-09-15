@@ -117,7 +117,7 @@ class FlightUpdateForm(forms.ModelForm):
 
         if commit:
             # Изменить статус полета в случае если полет ранее просрочен
-            if flight.departure_time > timezone.make_aware(datetime.datetime.now()):
+            if flight.departure_time > timezone.now():
                 flight.expire = Expiring.ACTIVE
                 flight.save()
 
@@ -142,7 +142,7 @@ class FlightUpdateForm(forms.ModelForm):
             for ticket in tickets:
 
                 # Вернуть существующим билетам статус Active если ранее они были неактивны
-                if ticket.flight.departure_time > timezone.make_aware(datetime.datetime.now()):
+                if ticket.flight.departure_time > timezone.now():
                     ticket.expire = Expiring.ACTIVE
                     ticket.save()
 

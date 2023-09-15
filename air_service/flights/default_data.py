@@ -17,13 +17,13 @@ time_list = [i for i in range(23)]
 
 dep_list = [
     timezone.make_aware(
-        datetime.datetime(2023, rn.randint(5, 12), rn.randint(1, 27), rn.randint(1, 23), rn.choice([0, 30]))) for
+        datetime(2023, rn.randint(9, 12), rn.randint(1, 27), rn.randint(1, 23), rn.choice([0, 30]))) for
     i in range(100)]
 flight_dict = {}
 for i, j in enumerate(dep_list):
     flight_dict[i] = {'dep_time': j}
     n = j + timedelta(hours=rn.randint(1, 7)) + timedelta(minutes=rn.choice([0, 30]))
-    naive_n = datetime.datetime(n.year, n.month, n.day, n.hour, n.minute, n.second, n.microsecond)
+    naive_n = datetime(n.year, n.month, n.day, n.hour, n.minute, n.second, n.microsecond)
     flight_dict[i].update({'arr_time': timezone.make_aware(naive_n)})
 
 airport_dict = {
