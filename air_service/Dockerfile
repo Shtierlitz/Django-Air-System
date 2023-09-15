@@ -1,6 +1,5 @@
 FROM python:3.10
-RUN apt-get update -y \
-     && apt-get install -y netcat
+RUN apt-get update -y && apt-get install -y vim netcat-openbsd
 RUN apt-get upgrade -y \
     && apt-get install -y postgresql gcc python3-dev musl-dev
 
