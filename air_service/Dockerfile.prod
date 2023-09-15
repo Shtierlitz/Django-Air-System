@@ -34,8 +34,8 @@ ENV APP_HOME=/home/app/web
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
-RUN apt-get update -y \
-     && apt-get install -y vim netcat
+RUN apt-get update -y && apt-get install -y vim netcat-openbsd
+
 
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
